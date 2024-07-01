@@ -6,3 +6,5 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///development.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
+
+from app import models, views, data_manager
