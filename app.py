@@ -1,6 +1,7 @@
 import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_jwt_extended import JWTManager
 
 app = Flask(__name__)
 
@@ -10,6 +11,9 @@ app.config['USE_DATABASE'] = True
 app.config['DATABASE_TYPE'] = os.getenv('DATABASE_TYPE', 'sqlite')
 app.config['DATABASE_URL'] = os.getenv('DATABASE_URL', 'sqlite:///development.db')
 db = SQLAlchemy(app)
+
+app.config['JWT_SECRET_KEY'] = 'super-secret'
+jwt = JWTManager(app)
 
 from models import User
 
