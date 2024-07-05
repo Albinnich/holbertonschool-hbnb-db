@@ -2,7 +2,9 @@ from . import db
 from .base_model import BaseModel
 from flask_bcrypt import Bcrypt
 from app import db
+from flask_sqlalchemy import SQLAlchemy
 
+db = SQLAlchemy()
 bcrypt = Bcrypt()
 
 class User(BaseModel):

@@ -1,12 +1,18 @@
 import os
-from flask import Flask
+from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
-from flask_jwt_extended import JWTManager
+from flask_jwt_extended import JWTManager, jwt_required, get_jwt_identity, get_jwt
 from dotenv import load_dotenv
+from models import db, User
+from auth import login
 
 load_dotenv()
 
 app = Flask(__name__)
+app.config.from_object('config.Config')
+
+db.init_app(app)
+jwt = JWTManager(app)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///development.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -28,6 +34,25 @@ if app.config['DATABASE_TYPE'] == 'sqlite' and app.config['ENV'] == 'development
 @app.route('/')
 def index():
     return 'Hello, World!'
+
+# Endpoint for user login
+@app.route('/login', methods=['POST'])
+def login():
+    return auth.login()
+
+# Example of a protected admin endpoint
+@app.route('/admin/data', methods=['POST', 'DELETE'])
+@jwt_required()
+def admin_data():
+    current_user_id = get_jwt_identity()
+    claims = get_jwt()
+
+    if not claims.get('is_admin'):
+        return jsonify({"msg": "Administration rights required"}), 403
+
+    # Proceed with admin-only functionality
+    # Example: perform actions like adding or deleting data
+    return jsonify({"msg": "Admin operation successful"}), 200
 
 # Ensure tables are created
 with app.app_context():
