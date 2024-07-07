@@ -38,7 +38,7 @@ def index():
 # Endpoint for user login
 @app.route('/login', methods=['POST'])
 def login():
-    return auth.login()
+    return login()
 
 # Example of a protected admin endpoint
 @app.route('/admin/data', methods=['POST', 'DELETE'])
